@@ -1,6 +1,6 @@
 #!/bin/bash
  
-function @()
+function atsign()
 {
   if [ $? = 127 ]
   then
@@ -51,3 +51,5 @@ function @()
  
   rm -f "$BUFFER"
 }
+
+alias @=atsign
