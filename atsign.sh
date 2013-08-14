@@ -4,6 +4,11 @@ ATSIGN_CACHE="$HOME/.cache/atsign"
 
 atsign_index()
 {
+    local LANG="C.UTF-8"
+    local LC_ALL="C.UTF-8"
+    local LC_CTYPE="C.UTF-8"
+    local LC_COLLATE="C.UTF-8"
+
     awk '
     {
         split($1, packages, ":")
@@ -25,7 +30,7 @@ atsign_index()
         for (x in dict)
             print x ":" dict[x]
     }
-    ' | LC_COLLATE=C sort
+    ' | sort
 }
 
 atsign_cache()
