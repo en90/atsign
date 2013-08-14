@@ -4,10 +4,10 @@ ATSIGN_CACHE="$HOME/.cache/atsign"
 
 atsign_index()
 {
-    local LANG="C.UTF-8"
-    local LC_ALL="C.UTF-8"
-    local LC_CTYPE="C.UTF-8"
-    local LC_COLLATE="C.UTF-8"
+    local LANG="C"
+    local LC_ALL="C"
+    local LC_CTYPE="C"
+    local LC_COLLATE="C"
 
     awk '
     {
