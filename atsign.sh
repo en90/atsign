@@ -4,28 +4,28 @@ function atsign()
 {
   if [ $? = 127 ]
   then
-    PROGRAM=$(history 2 | head -n 1 | tr -s \  \ | cut -f3 -d\  | tr -d '[:space:]')
-    PATTERN="/s?bin/$PROGRAM\$"
-    SHORT_PATTERN="$PROGRAM"
+    local PROGRAM=$(history 2 | head -n 1 | tr -s \  \ | cut -f3 -d\  | tr -d '[:space:]')
+    local PATTERN="/s?bin/$PROGRAM\$"
+    local SHORT_PATTERN="$PROGRAM"
   elif [ $1 != "" ]
   then
     case "$1" in
       -l*)
-        FILE="lib$(echo "$1" | sed 's/^-l//').(so|a)"
+        local FILE="lib$(echo "$1" | sed 's/^-l//').(so|a)"
         ;;
       *)
-        FILE="$1"
+        local FILE="$1"
     esac
-    PATTERN="/$FILE\$"
-    SHORT_PATTERN="$FILE"
+    local PATTERN="/$FILE\$"
+    local SHORT_PATTERN="$FILE"
   fi
  
-  BUFFER=$(mktemp)
+  local BUFFER=$(mktemp)
  
   (
     apt-file -x search "$PATTERN" > "$BUFFER"
  
-    COUNT=$(wc -l "$BUFFER" | cut -f1 -d\ )
+    local COUNT=$(wc -l "$BUFFER" | cut -f1 -d\ )
  
     case $COUNT in
       0)
@@ -34,7 +34,7 @@ function atsign()
         ;;
       1)
         cat "$BUFFER"
-        CHOICE=1
+        local CHOICE=1
         ;;
       *)
         nl "$BUFFER"
@@ -44,7 +44,7 @@ function atsign()
         ;;
     esac
  
-    PACKAGE=$(sed "$CHOICE!D" "$BUFFER" | cut -d: -f1)
+    local PACKAGE=$(sed "$CHOICE!D" "$BUFFER" | cut -d: -f1)
  
     /usr/bin/sudo /usr/bin/aptitude -P install "$PACKAGE"
   )
