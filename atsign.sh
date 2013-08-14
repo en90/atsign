@@ -51,6 +51,11 @@ atsign_update()
     atsign_cache lib '/lib[^/\s]+\.(a|so)[^/\s]*$'
 }
 
+atsign_trim()
+{
+    cut -c -$(($(tput cols) - 8))
+}
+
 atsign_search()
 {
     local DICT="$ATSIGN_CACHE/$1"
@@ -72,7 +77,7 @@ atsign_search()
             return 1
     esac
 
-    look -b "$2" "$DICT" | grep -P "^$PATTERN: " | atsign_index | column -t
+    look -b "$2" "$DICT" | grep -P "^$PATTERN: " | atsign_index | atsign_trim | column -t
 }
 
 atsign()
@@ -118,7 +123,7 @@ atsign()
             local CHOICE=1
             ;;
         *)
-            nl "$BUFFER"
+            nl "$BUFFER" | atsign_trim | less -F
             echo -n "> "
             local CHOICE=$(head -1)
             expr \( "$CHOICE" '>' 0 \) \& \( "$CHOICE" '<=' $COUNT \) >/dev/null || exit 1
