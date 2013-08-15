@@ -62,22 +62,7 @@ atsign_search()
 
     test -d "$ATSIGN_CACHE" || atsign_update
 
-    case "$1" in
-        all)
-            local PATTERN=".*$2.*"
-            ;;
-        bin)
-            local PATTERN="$2"
-            ;;
-        lib)
-            local PATTERN="$2\.(a|so)"
-            ;;
-        *)
-            echo "what?" 1>&2
-            return 1
-    esac
-
-    look -b "$2" "$DICT" | grep -P "^$PATTERN: " | atsign_index | atsign_trim | column -t
+    look -b "$2" "$DICT" | grep -P "^$3: " | atsign_index | atsign_trim | column -t
 }
 
 atsign()
@@ -86,6 +71,7 @@ atsign()
     then
         local DICT=bin
         local FILE=$(history 2 | head -n 1 | tr -s \  \ | cut -f3 -d\  | tr -d '[:space:]')
+        local PATTERN="${FILE}"
     elif [ x"" != x"$1" ]
     then
         case "$1" in
@@ -96,10 +82,12 @@ atsign()
             -l*)
                 local DICT=lib
                 local FILE="lib$(echo "$1" | sed 's/^-l//')"
+                local PATTERN="${FILE}\.(a|so)"
                 ;;
             *)
                 local DICT=all
                 local FILE="$1"
+                local PATTERN=".*${FILE}.*"
         esac
     else
         echo no 1>&2
@@ -109,7 +97,7 @@ atsign()
     local BUFFER=$(mktemp)
 
     (
-    atsign_search "$DICT" "$FILE" > "$BUFFER" || return 1
+    atsign_search "$DICT" "$FILE" "$PATTERN" > "$BUFFER" || return 1
 
     local COUNT=$(wc -l "$BUFFER" | cut -d' ' -f1)
 
