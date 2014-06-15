@@ -69,9 +69,18 @@ atsign()
 {
     if [ $? = 127 ]
     then
+        if [ x"" != x"$HISTTIMEFORMAT" ]
+        then
+            local HISTTIMEFORMAT_TMP="$HISTTIMEFORMAT"
+            unset HISTTIMEFORMAT
+        fi
         local DICT=bin
         local FILE=$(history 2 | head -n 1 | tr -s \  \ | cut -f3 -d\  | tr -d '[:space:]')
         local PATTERN="${FILE}"
+        if [ x"" != x"$HISTTIMEFORMAT_TMP" ]
+        then
+            export HISTTIMEFORMAT="$HISTTIMEFORMAT_TMP"
+        fi
     elif [ x"" != x"$1" ]
     then
         case "$1" in
